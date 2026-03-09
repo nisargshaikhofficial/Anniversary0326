@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Anniversary Hushkiii 💚💙</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root { --gb-green: #90ab20; --gb-dark: #052105; --hair: #4a3728; --shirt: #2d5a27; --jeans: #2b3d50; --skin: #ffdbac;}
+        
+        body { background: #333; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; -webkit-user-select: none; user-select: none; }
+        
+        #game-boy { background: #bbb; padding: 25px 20px; border-radius: 12px 12px 60px 12px; box-shadow: 10px 10px 0px #1a1a1a; width: 300px; position: relative; border: 4px solid #999; }
+        
+        #screen { 
+            background: var(--gb-green); 
+            height: 260px; 
+            border: 18px solid #444; 
+            border-radius: 4px;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end; 
+            position: relative; overflow: hidden;
+        }
+
+        /* --- HIGH VISIBILITY UI --- */
+        .stats { 
+            position: absolute; top: 10px; left: 10px; 
+            font-size: 14px; color: var(--gb-dark); font-weight: 900; 
+            z-index: 100; text-shadow: 1px 1px 0px #ffffff66;
+        }
+
+        #msg { 
+            position: absolute; top: 60px; /* High above the head */
+            font-size: 16px; color: var(--gb-dark); 
+            width: 100%; text-align: center; font-weight: 900; 
+            z-index: 100; text-transform: uppercase;
+            text-shadow: 1px 1px 0px #ffffff88;
+        }
+
+        #btn-letter { 
+            position: absolute; top: 10px; right: 10px; 
+            background: #fff; border: 3px solid var(--gb-dark); 
+            color: var(--gb-dark); width: 32px; height: 32px; 
+            border-radius: 5px; font-size: 18px; cursor: pointer; 
+            z-index: 110; box-shadow: 2px 2px 0 var(--gb-dark);
+        }
+
+        /* --- THE CHARACTER --- */
+        #character-container { position: relative; width: 80px; height: 130px; margin-bottom: 15px; z-index: 10; }
+        #character { position: absolute; bottom: 0; left: 10px; width: 60px; height: 120px; }
+        
+        .hair { position: absolute; top: 0; left: 2px; width: 56px; height: 50px; background: var(--hair); border-radius: 18px 18px 5px 5px; z-index: 1; }
+        
+        .face { position: absolute; top: 12px; left: 10px; width: 40px; height: 38px; background: var(--skin); border-radius: 10px; z-index: 2; }
+
+        .eyes { position: absolute; top: 12px; left: 6px; width: 28px; display: flex; justify-content: space-between; z-index: 5; }
+        .eye { width: 6px; height: 6px; background: #000; border-radius: 50%; animation: blink 4s infinite; }
+        @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+        .glasses { position: absolute; top: 18px; left: 10px; width: 40px; height: 12px; z-index: 4; display: flex; justify-content: space-around; }
+        .glasses::before, .glasses::after { content: ''; width: 14px; height: 12px; border: 2px solid #000; border-radius: 3px; }
+        .glasses-bridge { position: absolute; top: 4px; left: 17px; width: 6px; height: 2px; background: #000; }
+
+        .shirt { position: absolute; top: 50px; left: 10px; width: 40px; height: 38px; background: var(--shirt); border-radius: 6px; z-index: 1; }
+        .jeans { position: absolute; top: 88px; left: 12px; width: 36px; height: 27px; background: var(--jeans); border-radius: 3px; }
+        
+        /* Fixed Hands */
+        .hand { position: absolute; width: 12px; height: 12px; background: var(--skin); border-radius: 50%; z-index: 6; top: 65px; border: 1px solid rgba(0,0,0,0.1); }
+        .hand.left { left: 0px; }
+        .hand.right { left: 48px; } /* Fixed right hand position */
+
+        /* --- ANIMATIONS --- */
+        .bounce { animation: idle 1.6s infinite ease-in-out; }
+        @keyframes idle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        
+        #character.eating .hand { transform: translateY(-15px); }
+        #character.hugging { animation: hug-shake 0.5s ease; }
+        @keyframes hug-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        #character.kissing { animation: kiss-pucker 0.6s ease; }
+        @keyframes kiss-pucker { 0%, 100% { transform: scale(1.05) translateY(-5px); } }
+
+        .particle { position: absolute; font-size: 28px; pointer-events: none; animation: flyUp 1.2s ease-out forwards; z-index: 120; opacity: 0; }
+        @keyframes flyUp { 
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-140px) scale(1.6); opacity: 0; }
+        }
+
+        /* --- CONTROLS --- */
+        .buttons-container { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center;}
+        .row { display: flex; justify-content: space-around; width: 100%; }
+        
+        .round-btn { 
+            background: #a11; border: none; width: 68px; height: 68px; border-radius: 50%; 
+            color: white; font-weight: bold; font-family: 'Courier New'; font-size: 11px;
+            cursor: pointer; box-shadow: 0 5px #500;
+        }
+        .round-btn:active { box-shadow: 0 2px #500; transform: translateY(3px); }
+        .round-btn.special { background: #c62828; width: 85px; height: 85px; font-size: 14px; box-shadow: 0 6px #7f1919; }
+
+        #letter-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 300; display: none; justify-content: center; align-items: center; }
+        #letter-overlay.open { display: flex; }
+        #letter-content { background: #fdf6e3; width: 80%; padding: 25px; border-radius: 5px; color: #333; line-height: 1.4; border: 2px solid #ddd; position: relative; }
+        #close-letter { position: absolute; top: 5px; right: 10px; font-size: 24px; cursor: pointer; color: #999; }
+    </style>
+</head>
+<body>
+
+<div id="game-boy">
+    <div id="screen">
+        <div class="stats">
+            FOOD: <span id="h-val">--</span>%<br>
+            LOVE: <span id="l-val">--</span>%
+        </div>
+        
+        <div id="msg">HI BEAUTIFUL! 💚💙 </div>
+        
+        <button id="btn-letter">✉</button>
+        
+        <div id="character-container">
+            <div id="character" class="bounce">
+                <div class="hair"></div>
+                <div class="face">
+                    <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+                </div>
+                <div class="glasses"><div class="glasses-bridge"></div></div>
+                <div class="shirt"></div>
+                <div class="jeans"></div>
+                <div class="hand left"></div>
+                <div class="hand right"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <div class="row">
+            <button class="round-btn" id="btn-feed">FEED<br>🍕</button>
+            <button class="round-btn" id="btn-hug">HUG<br>🤗</button>
+        </div>
+        <button class="round-btn special" id="btn-kiss">KISS<br>💋</button>
+    </div>
+</div>
+
+<div id="letter-overlay">
+    <div id="letter-content">
+        <span id="close-letter">&times;</span>
+        <h3 style="margin-top:0">My Dear Wife, My Love, My Baby, Meri Parvati, Meri Hushkiii 💚💙<br>Happy Anniversary Meri Hushkiii! 💚💙</h3>
+        <p>I know bahuuuut missing karr rahi ho haina meri cutiee, yeh dekho main wahi hoon hamesha tumhare saath hamesha hamesha hehe 💚💙</p>
+        <p>Ab bahuuuuut saari pappi do, bahuuut pyaar karo, aur pijja bhi khilao hehe cutieee. Main hamesha tumhare saath rahunga hamesha hamesha meri bacchi ho tum, bahuuut jaldi jaldi milna hain, jaldi jaldi shaadi karni hain haina meri Hushkiii 💚💙</p>
+	<p>I love you a loooooooooooooooot baby 💚💙 Boooooooov badhu, savthi vadhaare, unlimited, infinite hehe 💚💙</p>
+        <p>Always Yours, Hamesha Hamesha<br>Niyu 💚💙</p>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'ld_anniversary_pet_v4';
+    let stats = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { hunger: 85, love: 85 };
+    
+    const hDisplay = document.getElementById('h-val');
+    const lDisplay = document.getElementById('l-val');
+    const char = document.getElementById('character');
+    const msg = document.getElementById('msg');
+    const screen = document.getElementById('screen');
+
+    function updateUI() {
+        hDisplay.innerText = Math.floor(stats.hunger);
+        lDisplay.innerText = Math.floor(stats.love);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+        
+        if(stats.hunger < 30) msg.innerText = "FEED ME 🍕";
+        else if(stats.love < 30) msg.innerText = "I NEED LOVE 🥺";
+    }
+
+    function spawnParticle(emoji) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.innerText = emoji;
+        p.style.left = (Math.random() * 40 + 30) + '%'; 
+        p.style.bottom = '110px';
+        screen.appendChild(p);
+        setTimeout(() => p.remove(), 1200);
+    }
+
+    function performAction(type) {
+        char.className = ''; 
+        void char.offsetWidth; 
+
+        if(type === 'feed') {
+            stats.hunger = Math.min(100, stats.hunger + 15);
+            msg.innerText = "PIZZA! YUM! 💚💙";
+            char.classList.add('eating', 'bounce');
+            for(let i=0; i<3; i++) setTimeout(()=>spawnParticle('🍕'), i*200);
+        } 
+        else if (type === 'hug') {
+            stats.love = Math.min(100, stats.love + 10);
+            msg.innerText = "HUG RECEIVED! 🤗🤗💚💙";
+            char.classList.add('hugging');
+            spawnParticle('🤗💖');
+        }
+        else if (type === 'kiss') {
+            stats.love = Math.min(100, stats.love + 20);
+            msg.innerText = "I love you honey 💚💙";
+            char.classList.add('kissing');
+            for(let i=0; i<6; i++) setTimeout(()=>spawnParticle(['❤️','💖','💕'][i%3]), i*150);
+        }
+
+        setTimeout(() => {
+            char.className = 'bounce';
+            updateUI();
+        }, 800);
+    }
+
+    document.getElementById('btn-feed').addEventListener('click', () => performAction('feed'));
+    document.getElementById('btn-hug').addEventListener('click', () => performAction('hug'));
+    document.getElementById('btn-kiss').addEventListener('click', () => performAction('kiss'));
+
+    const overlay = document.getElementById('letter-overlay');
+    document.getElementById('btn-letter').addEventListener('click', () => overlay.classList.add('open'));
+    document.getElementById('close-letter').addEventListener('click', () => overlay.classList.remove('open'));
+
+    setInterval(() => {
+        stats.hunger = Math.max(0, stats.hunger - 0.4);
+        stats.love = Math.max(0, stats.love - 0.2);
+        updateUI();
+    }, 10000);
+
+    updateUI();
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+</script>
+</body>
+</html>
