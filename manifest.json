@@ -1,6 +1,6 @@
 {
-  "name": "Anniversary Pet",
-  "short_name": "MyPet",
+  "name": "Anniversary",
+  "short_name": "Digital Niyu",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#8bac0f",
@@ -12,4 +12,5 @@
       "type": "image/png"
     }
   ]
+
 }
